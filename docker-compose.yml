@@ -1,0 +1,40 @@
+services:
+  # Update this to the name of the service you want to work with in your docker-compose.yml file
+  main:
+
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      args:
+        - "USER_ID=${UID:-1000}"
+        - "GROUP_ID=${GID:-1000}"
+
+    user: "${UID:-1000}:${GID:-1000}"
+
+    volumes:
+      - $HOME/.ssh:/home/devcontainer/.ssh
+      - $HOME/.config:/home/devcontainer/.config:cached
+      - $HOME/.profile:/home/devcontainer/.profile:cached
+      - local:/home/devcontainer/.local
+      - cache:/home/devcontainer/.cache
+
+      # project mounting
+      - ..:/home/devcontainer/${LOCAL_WORKSPACE_FOLDER}
+
+    environment:
+      - TZ="Europe/Berlin"
+
+    # Uncomment the next four lines if you will use a ptrace-based debugger like C++, Go, and Rust.
+    # cap_add:
+    #   - SYS_PTRACE
+    # security_opt:
+    #   - seccomp:unconfined
+
+    # Overrides default command so things don't shut down after the process ends.
+    command: /bin/sh -c "while sleep 1000; do :; done"
+
+volumes:
+  local:
+    name: "local"
+  cache:
+    name: "cache"
