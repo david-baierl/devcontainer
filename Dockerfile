@@ -1,4 +1,4 @@
-FROM debian:trixie-slim
+FROM rust:1.97.1-slim-trixie
 USER root
 
 ENV RUNNING_IN_DOCKER=true
@@ -8,7 +8,7 @@ ENV RUNNING_IN_DOCKER=true
 ################################################
 
 RUN apt update && apt upgrade -y && apt install -yq \
-    stow git vim curl gnupg2 sudo wget file zip unzip \
+    stow git vim curl gnupg2 sudo wget file zip unzip build-essential \
     locales locales-all tzdata \
     zsh fastfetch \
     && apt clean && rm -rf /var/lib/apt/lists/*
@@ -51,3 +51,15 @@ RUN curl -sS https://starship.rs/install.sh | sh -s -- -y
 
 SHELL ["zsh", "-c"]
 ENV SHELL=/usr/bin/zsh
+
+################################################
+# rust
+################################################
+
+RUN rustup update
+
+RUN rustup component add rustfmt
+
+RUN rustup target add \
+    x86_64-pc-windows-gnu
+# aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android
