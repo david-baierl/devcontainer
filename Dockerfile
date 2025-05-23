@@ -8,7 +8,8 @@ ENV RUNNING_IN_DOCKER=true
 ################################################
 
 RUN apt update && apt upgrade -y && apt install -yq \
-    stow git vim curl gnupg2 sudo wget file zip unzip build-essential \
+    stow git vim curl gnupg2 sudo wget file zip unzip build-essential libssl-dev \
+    libwebkit2gtk-4.1-dev libxdo-dev libayatana-appindicator3-dev librsvg2-dev \
     locales locales-all tzdata \
     && apt clean && rm -rf /var/lib/apt/lists/*
 
