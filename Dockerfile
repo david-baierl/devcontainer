@@ -1,4 +1,4 @@
-FROM rust:1.80.1-bookworm
+FROM debian:bookworm-slim
 USER root
 
 ENV RUNNING_IN_DOCKER=true
@@ -7,9 +7,19 @@ ENV RUNNING_IN_DOCKER=true
 # basics
 ################################################
 
-RUN apt update && apt upgrade -y
-RUN apt install -y \
-    git vim curl gnupg2
+RUN apt update && apt upgrade -y && apt install -yq \
+    stow git vim curl gnupg2 sudo wget file zip unzip \
+    locales locales-all tzdata \
+    && apt clean && rm -rf /var/lib/apt/lists/*
+
+################################################
+# locals
+################################################
+
+ENV LC_ALL=en_US.UTF-8
+ENV LC_TYPE=en_US.UTF-8
+ENV LANG=en_US.UTF-8
+ENV LANGUAGE=en_US.UTF-8
 
 ################################################
 # shell
@@ -18,35 +28,35 @@ RUN apt install -y \
 # install fish
 RUN echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/3/Debian_12/ /' | tee /etc/apt/sources.list.d/shells:fish:release:3.list
 RUN curl -fsSL https://download.opensuse.org/repositories/shells:fish:release:3/Debian_12/Release.key | gpg --dearmor | tee /etc/apt/trusted.gpg.d/shells_fish_release_3.gpg > /dev/null
-RUN apt update
-RUN apt install -y fish
+RUN apt update && apt upgrade -y && apt install -yq \
+  fish \
+  && apt clean && rm -rf /var/lib/apt/lists/*
 
 # install starship
 RUN curl -sS https://starship.rs/install.sh | sh -s -- -y
 
-# install fisher
-RUN fish -c 'curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher'
-RUN fish -c 'fisher install jorgebucaran/autopair.fish'
-RUN fish -c 'fisher install edc/bass'
-
-################################################
-# rust
-################################################
-
-# rust toolchain
-RUN rustup component add rustfmt
+SHELL ["fish", "-c"]
+ENV SHELL=/usr/bin/fish
 
 ################################################
 # user
 ################################################
 
+ARG USERNAME=vscode
 ARG USER_ID=1000
-ARG GROUP_ID=1000
-RUN groupadd -g $GROUP_ID -o devcontainer
-RUN useradd -m -u $USER_ID -g $GROUP_ID -o -s /usr/bin/fish devcontainer
+ARG GROUP_ID=$USER_ID
+
+RUN groupadd -g $GROUP_ID -o $USERNAME
+RUN useradd -m -u $USER_ID -g $GROUP_ID -o -s /usr/bin/fish $USERNAME
+
+# add to sudoers
+RUN echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME && chmod 0440 /etc/sudoers.d/$USERNAME
 
 # cache mount points
-RUN mkdir -p /home/devcontainer/.cache && chown devcontainer:devcontainer /home/devcontainer/.cache
-RUN mkdir -p /home/devcontainer/.local && chown devcontainer:devcontainer /home/devcontainer/.local
+RUN mkdir -p /home/$USERNAME/.cache && chown $USERNAME:$USERNAME /home/$USERNAME/.cache
+RUN mkdir -p /home/$USERNAME/.local && chown $USERNAME:$USERNAME /home/$USERNAME/.local
 
-USER devcontainer
+USER $USERNAME
+
+# install fisher
+RUN curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher
