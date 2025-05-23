@@ -1,7 +1,7 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the
 // README at: https://github.com/devcontainers/templates/tree/main/src/docker-existing-docker-compose
 {
-  "name": "main",
+  "name": "node",
   // Update the 'dockerComposeFile' list if you have more compose files or use different names.
   // The .devcontainer/docker-compose.yml file contains any overrides you need/want to make.
   "dockerComposeFile": [
@@ -20,10 +20,14 @@
   "customizations": {
     "vscode": {
       "extensions": [
+        "dbaeumer.vscode-eslint",
         "EditorConfig.EditorConfig",
         "Huuums.vscode-fast-folder-structure",
+        "mike-co.import-sorter",
         "streetsidesoftware.code-spell-checker-german",
         "streetsidesoftware.code-spell-checker",
+        "styled-components.vscode-styled-components",
+        "stylelint.vscode-stylelint",
         "yzhang.markdown-all-in-one"
       ]
     }

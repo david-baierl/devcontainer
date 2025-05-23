@@ -60,3 +60,18 @@ USER $USERNAME
 
 # install fisher
 RUN curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher
+
+################################################
+# node
+################################################
+
+ENV NODE_VERSION=22.16.0
+
+# install nvm via fisher
+RUN fisher install jorgebucaran/nvm.fish
+
+RUN set --universal nvm_default_version $NODE_VERSION
+RUN set --universal nvm_default_packages pnpm
+
+RUN nvm install $NODE_VERSION
+RUN nvm use $NODE_VERSION && npm install --global pnpm
