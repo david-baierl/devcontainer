@@ -72,3 +72,18 @@ RUN rustup target add \
     aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android
 
 RUN rustup component add rustfmt
+
+################################################
+# node
+################################################
+
+ENV NODE_VERSION=22.16.0
+
+# install nvm via fisher
+RUN fisher install jorgebucaran/nvm.fish
+
+RUN set --universal nvm_default_version $NODE_VERSION
+RUN set --universal nvm_default_packages pnpm
+
+RUN nvm install $NODE_VERSION
+RUN nvm use $NODE_VERSION && npm install --global pnpm

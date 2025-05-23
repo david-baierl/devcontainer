@@ -20,12 +20,16 @@
   "customizations": {
     "vscode": {
       "extensions": [
+        "dbaeumer.vscode-eslint",
         "dustypomerleau.rust-syntax",
         "EditorConfig.EditorConfig",
         "Huuums.vscode-fast-folder-structure",
+        "mike-co.import-sorter",
         "rust-lang.rust-analyzer",
         "streetsidesoftware.code-spell-checker-german",
         "streetsidesoftware.code-spell-checker",
+        "styled-components.vscode-styled-components",
+        "stylelint.vscode-stylelint",
         "tamasfe.even-better-toml",
         "tauri-apps.tauri-vscode",
         "yzhang.markdown-all-in-one"
