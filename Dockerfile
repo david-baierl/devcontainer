@@ -67,3 +67,12 @@ RUN rustup target add \
   # i686-linux-android \
   # x86_64-linux-android \
   x86_64-pc-windows-gnu
+
+################################################
+# deno
+################################################
+
+RUN curl -fsSL https://deno.land/install.sh | sh
+ENV PATH="/home/$USERNAME/.deno/bin:$PATH"
+
+# RUN deno upgrade --version 2.9.3
