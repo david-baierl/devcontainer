@@ -51,3 +51,12 @@ RUN curl -sS https://starship.rs/install.sh | sh -s -- -y
 
 SHELL ["zsh", "-c"]
 ENV SHELL=/usr/bin/zsh
+
+################################################
+# deno
+################################################
+
+RUN curl -fsSL https://deno.land/install.sh | sh
+ENV PATH="/home/$USERNAME/.deno/bin:$PATH"
+
+# RUN deno upgrade --version 2.9.3
