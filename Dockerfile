@@ -8,9 +8,13 @@ ENV RUNNING_IN_DOCKER=true
 ################################################
 
 RUN apt update && apt upgrade -y && apt install -yq \
-    stow git vim curl gnupg2 sudo wget file zip unzip \
+    # common utils
+    stow git vim curl sudo wget zsh fastfetch \
+    # locales and timezone
     locales locales-all tzdata \
-    zsh fastfetch \
+    # tauri dependencies
+    build-essential libwebkit2gtk-4.1-dev \
+    # cleanup
     && apt clean && rm -rf /var/lib/apt/lists/*
 
 ################################################
@@ -51,3 +55,10 @@ RUN curl -sS https://starship.rs/install.sh | sh -s -- -y
 
 SHELL ["zsh", "-c"]
 ENV SHELL=/usr/bin/zsh
+
+################################################
+# pixi
+################################################
+
+RUN curl -fsSL https://pixi.sh/install.sh | sh
+ENV PATH="/home/$USERNAME/.pixi/bin:$PATH"
