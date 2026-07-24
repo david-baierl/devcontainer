@@ -1,4 +1,4 @@
-FROM rust:1.97.1-slim-trixie
+FROM debian:trixie-slim
 USER root
 
 ENV RUNNING_IN_DOCKER=true
@@ -8,10 +8,22 @@ ENV RUNNING_IN_DOCKER=true
 ################################################
 
 RUN apt update && apt upgrade -y && apt install -yq \
-    stow git vim curl gnupg2 sudo wget file zip unzip build-essential libssl-dev \
-    libwebkit2gtk-4.1-dev libxdo-dev libayatana-appindicator3-dev librsvg2-dev \
+    #
+    # common utils
+    stow git vim curl sudo wget zsh fastfetch zip unzip \
+    #
+    # locales and timezone
     locales locales-all tzdata \
-    zsh fastfetch \
+    #
+    # rust & tauri dependencies
+    build-essential libwebkit2gtk-4.1-dev \
+    #
+    # cross-compile: windows
+    # Please note that .msi installers can only be created on Windows
+    # as WiX can only run on Windows systems.
+    nsis lld llvm clang \
+    #
+    # cleanup
     && apt clean && rm -rf /var/lib/apt/lists/*
 
 ################################################
@@ -57,16 +69,25 @@ ENV SHELL=/usr/bin/zsh
 # rust
 ################################################
 
-RUN rustup update
-
-RUN rustup component add rustfmt
+RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
+ENV PATH="/home/$USERNAME/.cargo/bin:${PATH}"
 
 RUN rustup target add \
-  # aarch64-linux-android \
-  # armv7-linux-androideabi \
-  # i686-linux-android \
-  # x86_64-linux-android \
-  x86_64-pc-windows-gnu
+    #
+    # --- windows --- #
+    x86_64-pc-windows-msvc \
+    # x86_64-pc-windows-gnu \
+    #
+    # --- android --- #
+    # aarch64-linux-android \
+    # armv7-linux-androideabi \
+    # i686-linux-android \
+    # x86_64-linux-android \
+    #
+    # --- linux --- #
+    x86_64-unknown-linux-gnu
+
+RUN cargo install --locked cargo-xwin
 
 ################################################
 # deno
@@ -74,5 +95,3 @@ RUN rustup target add \
 
 RUN curl -fsSL https://deno.land/install.sh | sh
 ENV PATH="/home/$USERNAME/.deno/bin:$PATH"
-
-# RUN deno upgrade --version 2.9.3
