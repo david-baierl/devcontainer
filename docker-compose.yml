@@ -8,6 +8,8 @@ services:
       args:
         - "USER_ID=${UID:-1000}"
         - "GROUP_ID=${GID:-1000}"
+      tags:
+        - devcontainer/deno:local
 
     user: "${UID:-1000}:${GID:-1000}"
 

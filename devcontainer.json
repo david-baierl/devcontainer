@@ -24,7 +24,9 @@
         "Huuums.vscode-fast-folder-structure",
         "streetsidesoftware.code-spell-checker-german",
         "streetsidesoftware.code-spell-checker",
-        "yzhang.markdown-all-in-one"
+        "yzhang.markdown-all-in-one",
+        "hashicorp.hcl",
+        "denoland.vscode-deno"
       ]
     }
   },
