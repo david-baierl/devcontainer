@@ -8,9 +8,14 @@ ENV RUNNING_IN_DOCKER=true
 ################################################
 
 RUN apt update && apt upgrade -y && apt install -yq \
-    stow git vim curl gnupg2 sudo wget file zip unzip \
+    #
+    # common utils
+    stow git vim curl sudo wget zsh fastfetch zip unzip \
+    #
+    # locales and timezone
     locales locales-all tzdata \
-    zsh fastfetch \
+    #
+    # cleanup
     && apt clean && rm -rf /var/lib/apt/lists/*
 
 ################################################
@@ -58,5 +63,3 @@ ENV SHELL=/usr/bin/zsh
 
 RUN curl -fsSL https://deno.land/install.sh | sh
 ENV PATH="/home/$USERNAME/.deno/bin:$PATH"
-
-# RUN deno upgrade --version 2.9.3
