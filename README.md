@@ -1,3 +1,6 @@
+## !!! moved to [codeberg](https://codeberg.org/david-baierl/devcontainer)
+this repository was moved to codeberg and is no longer continued on github
+
 ### install
 
 ```sh
