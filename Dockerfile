@@ -1,4 +1,4 @@
-FROM rust:1.97.1-slim-trixie
+FROM debian:trixie-slim
 USER root
 
 ENV RUNNING_IN_DOCKER=true
@@ -8,9 +8,17 @@ ENV RUNNING_IN_DOCKER=true
 ################################################
 
 RUN apt update && apt upgrade -y && apt install -yq \
-    stow git vim curl gnupg2 sudo wget file zip unzip build-essential \
+    #
+    # common utils
+    stow git vim curl sudo wget zsh fastfetch zip unzip \
+    #
+    # locales and timezone
     locales locales-all tzdata \
-    zsh fastfetch \
+    #
+    # rust
+    build-essential \
+    #
+    # cleanup
     && apt clean && rm -rf /var/lib/apt/lists/*
 
 ################################################
@@ -56,10 +64,22 @@ ENV SHELL=/usr/bin/zsh
 # rust
 ################################################
 
+RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
+ENV PATH="/home/$USERNAME/.cargo/bin:${PATH}"
+
 RUN rustup update
-
 RUN rustup component add rustfmt
-
 RUN rustup target add \
-    x86_64-pc-windows-gnu
-# aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android
+    #
+    # --- windows --- #
+    # x86_64-pc-windows-msvc \
+    # x86_64-pc-windows-gnu \
+    #
+    # --- android --- #
+    # aarch64-linux-android \
+    # armv7-linux-androideabi \
+    # i686-linux-android \
+    # x86_64-linux-android \
+    #
+    # --- linux --- #
+    x86_64-unknown-linux-gnu
